@@ -3,14 +3,23 @@ package Ap_assignment.Lab3;
 import java.util.*;
 
 abstract class Hero{
-    protected String name;
-    protected int HP;
-    protected int XP;
-    protected int defense_safe;
-    protected boolean defense_applicable;
-    protected int number_of_moves;
-    protected int AttackDamage;
-    protected boolean is_special_power_active;
+    private String name;
+    private int HP;
+    private int XP;
+    private int defense_safe;
+    private int number_of_moves;
+    private int AttackDamage;
+    private boolean is_special_power_active;
+    private boolean defense_applicable;
+    Hero(String name){
+        this.name=name;
+    }
+    public boolean getDefense_applicable() {
+        return this.defense_applicable;
+    }
+    public void setDefense_applicable(boolean defense_applicable) {
+        this.defense_applicable = defense_applicable;
+    }
 
     public int getAttackDamage() {
     	return this.AttackDamage;
@@ -74,45 +83,46 @@ abstract class Hero{
 }
 class Warrior extends Hero{
     Warrior(String name){
-        super();
-        this.name=name;
-        this.AttackDamage=10;
-        this.XP=0;
-        this.defense_safe=3;
-        this.is_special_power_active=false;
-        this.defense_applicable=false;
+        super(name);
+        this.setAttackDamage(10);
+        this.setXP(0);
+        this.setDefense_safe(3);
+        this.setIs_special_power_active(false);
+        this.setDefense_applicable(false);
     }
+    @Override
     public void attack(Monster m,int total_hero_hp,int total_monster_hp){
         int temp=10;
-        this.number_of_moves+=1;
-        if(this.number_of_moves<=3 && this.is_special_power_active){
-            this.XP+=5;
-            this.HP+=5;
+        this.setNumber_of_moves(this.getNumber_of_moves()+1);
+        if(this.getNumber_of_moves()<=3 && this.getIs_special_power_active()){
+            this.setXP(this.getXP()+5);
+            this.setHP(this.getHP()+5);
             System.out.println("Your Hp and XP is increased by 5");
         }
-        else if(this.number_of_moves>3){
+        else if(this.getNumber_of_moves()>3){
             temp=Math.min(temp, m.getHP());
             m.reduce_Hp(temp);
             System.out.println("You attacked and inflicted "+temp+" damage to the monster");
         }
-        System.out.println("Your Hp: "+this.HP+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
-        if(this.number_of_moves>3 && this.is_special_power_active){
+        System.out.println("Your Hp: "+this.getHP()+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
+        if(this.getNumber_of_moves()>3 && this.getIs_special_power_active()){
             System.out.println("special power deactivated");
-            this.is_special_power_active=false;
+            this.setIs_special_power_active(false);
         }
     }
+    @Override
     public void defense(Monster m,int total_hero_hp,int total_monster_hp){
-        this.defense_applicable=true;
+        this.setDefense_applicable(true);
         System.out.println("Monster attack reduced by 3");
-        this.number_of_moves+=1;
-        if(this.number_of_moves<=3 && this.is_special_power_active){
-            this.XP+=5;
-            this.HP+=5;
+        this.setNumber_of_moves(this.getNumber_of_moves()+1);
+        if(this.getNumber_of_moves()<=3 && this.getIs_special_power_active()){
+            this.setXP(this.getXP()+5);
+            this.setHP(this.getHP()+5);
             System.out.println("Your Hp and XP is increased by 5");
         }
-        System.out.println("Your Hp: "+this.HP+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
-        if(this.number_of_moves>3 && this.is_special_power_active){
-            this.is_special_power_active=false;
+        System.out.println("Your Hp: "+this.getHP()+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
+        if(this.getNumber_of_moves()>3 && this.getIs_special_power_active()){
+            this.setIs_special_power_active(false);
             System.out.println("Special power deactivated");
         }
     }
@@ -120,48 +130,48 @@ class Warrior extends Hero{
 }
 class Mage extends Hero{
     Mage(String name){
-        super();
-        this.name=name;
-        this.AttackDamage=5;
-        this.XP=0;
-        this.defense_safe=5;
-        this.is_special_power_active=false;
-        this.defense_applicable=false;
-
+        super(name);
+        this.setAttackDamage(5);
+        this.setXP(0);
+        this.setDefense_safe(5);
+        this.setIs_special_power_active(false);
+        this.setDefense_applicable(false);
     }
+    @Override
     public void attack(Monster m,int total_hero_hp,int total_monster_hp){
         int temp=5;
-        this.number_of_moves+=1;
-        if(this.number_of_moves<=3 && this.is_special_power_active){
+        this.setNumber_of_moves(this.getNumber_of_moves()+1);
+        if(this.getNumber_of_moves()<=3 && this.getIs_special_power_active()){
             temp=(int)(m.getHP()*0.05);
             temp=Math.min(temp, m.getHP());
             m.reduce_Hp(temp);
             System.out.println("You attacked and inflicted "+temp+" damage to the monster");
         }
-        else if(this.number_of_moves>3){
+        else if(this.getNumber_of_moves()>3){
             temp=Math.min(temp, m.getHP());
             m.reduce_Hp(temp);
             System.out.println("You attacked and inflicted "+temp+" damage to the monster");
         }
-        System.out.println("Your Hp: "+this.HP+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
-        if(this.number_of_moves>3 && this.is_special_power_active){
-            this.is_special_power_active=false;
+        System.out.println("Your Hp: "+this.getHP()+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
+        if(this.getNumber_of_moves()>3 && this.getIs_special_power_active()){
+            this.setIs_special_power_active(false);
             System.out.println("special power deactivated");
         }
     }
+    @Override
     public void defense(Monster m,int total_hero_hp,int total_monster_hp){
-        this.defense_applicable=true;
+        this.setDefense_applicable(true);
         System.out.println("Monster attack reduced by 5");
-        this.number_of_moves+=1;
-        if(this.number_of_moves<3 && this.is_special_power_active){
+        this.setNumber_of_moves(this.getNumber_of_moves()+1);
+        if(this.getNumber_of_moves()<=3 && this.getIs_special_power_active()){
             int temp=(int)(m.getHP()*0.05);
             temp=Math.min(temp, m.getHP());
             m.reduce_Hp(temp);
             System.out.println("You caused "+temp+" damage to the monster");
         }
-        System.out.println("Your Hp: "+this.HP+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
-        if(this.number_of_moves>3 && this.is_special_power_active){
-            this.is_special_power_active=false;
+        System.out.println("Your Hp: "+this.getHP()+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
+        if(this.getNumber_of_moves()>3 && this.getIs_special_power_active()){
+            this.setIs_special_power_active(false);
             System.out.println("Special power deactivated");
         }
     }
@@ -169,23 +179,22 @@ class Mage extends Hero{
 }
 class Thief extends Hero{
     Thief(String name){
-        super();
-        this.name=name;
-        this.AttackDamage=6;
-        this.XP=0;
-        this.defense_safe=4;
-        this.is_special_power_active=false;
-        this.defense_applicable=false;
+        super(name);
+        this.setAttackDamage(6);
+        this.setDefense_safe(4);
+        this.setXP(0);
+        this.setIs_special_power_active(false);
+        this.setDefense_applicable(false);
     }
     public void attack(Monster m,int total_hero_hp,int total_monster_hp){
         int temp=6;
-        this.number_of_moves+=1;
-        if(this.is_special_power_active){
+        this.setNumber_of_moves(this.getNumber_of_moves()+1);
+        if(this.getIs_special_power_active()){
             temp=(int)(m.getHP()*0.3);
             temp=Math.min(temp, m.getHP());
             m.reduce_Hp(temp);
-            this.HP+=temp;
-            this.is_special_power_active=false;
+            this.setHP(this.getHP()+temp);
+            this.setIs_special_power_active(false);
             System.out.println("You have stolen "+temp+" HP from the monster");
             System.out.println("special power deactivated");
         }
@@ -194,77 +203,72 @@ class Thief extends Hero{
             m.reduce_Hp(temp);
             System.out.println("You attacked and inflicted "+temp+" damage to the monster");
         }
-        System.out.println("Your Hp: "+this.HP+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
+        System.out.println("Your Hp: "+this.getHP()+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
     }
     public void defense(Monster m,int total_hero_hp,int total_monster_hp){
-        this.number_of_moves+=1;
-        this.defense_applicable=true;
+        this.setNumber_of_moves(this.getNumber_of_moves()+1);
+        this.setDefense_applicable(true);
         System.out.println("Monster attack reduced by 4");
-        if(this.is_special_power_active){
+        if(this.getIs_special_power_active()){
             int temp=(int)(m.getHP()*0.3);
             temp=Math.min(temp, m.getHP());
             m.reduce_Hp(temp);
-            this.HP+=temp;
-            this.is_special_power_active=false;
+            this.setHP(this.getHP()+temp);
+            this.setIs_special_power_active(false);
             System.out.println("You stole "+temp+" HP from monster");
             System.out.println("special power deactivated");
         }
-        System.out.println("Your Hp: "+this.HP+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
+        System.out.println("Your Hp: "+this.getHP()+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
     }
 
 }
 class Healer extends Hero{
     Healer(String name){
-        super();
-        this.name=name;
-        this.AttackDamage=4;
-        this.XP=0;
-        this.defense_safe=8;
-        this.is_special_power_active=false;
-        this.defense_applicable=false;
+        super(name);
+        this.setAttackDamage(4);
+        this.setDefense_safe(8);
+        this.setXP(0);
+        this.setIs_special_power_active(false);
+        this.setDefense_applicable(false);
     }
     public void attack(Monster m,int total_hero_hp,int total_monster_hp){
         int temp=4;
-        this.number_of_moves+=1;
-        if(this.number_of_moves<=3 && this.is_special_power_active){
-            temp=(int)(this.HP*0.05);
-            this.HP=temp;
+        this.setNumber_of_moves(this.getNumber_of_moves()+1);
+        if(this.getNumber_of_moves()<=3 && this.getIs_special_power_active()){
+            temp=(int)(this.getHP()*0.05);
+            this.setHP(this.getHP()+temp);
             System.out.println("your Hp increased by 5% ");
         }
-        else if(this.number_of_moves>3){
+        else if(this.getNumber_of_moves()>3){
             temp=Math.min(temp, m.getHP());
             m.reduce_Hp(temp);
             System.out.println("You attacked and inflicted "+temp+" damage to the monster");
         }
-        System.out.println("Your Hp: "+this.HP+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
-        if(this.number_of_moves<=3 && this.is_special_power_active){
-            this.is_special_power_active=false;
+        System.out.println("Your Hp: "+this.getHP()+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
+        if(this.getNumber_of_moves()>3 && this.getIs_special_power_active()){
+            this.setIs_special_power_active(false);
             System.out.println("Special power deactivated");
         }
 
     }
     public void defense(Monster m,int total_hero_hp,int total_monster_hp){
-        this.defense_applicable=true;
-        this.number_of_moves+=1;
+        this.setDefense_applicable(true);
+        this.setNumber_of_moves(this.getNumber_of_moves()+1);
         System.out.println("Monster attack reduced by 8");
-        if(this.number_of_moves<=3 && this.is_special_power_active){
-            int temp=(int)(this.HP*0.05);
-            this.HP=temp;
+        if(this.getNumber_of_moves()<=3 && this.getIs_special_power_active()){
+            int temp=(int)(this.getHP()*0.05);
+            this.setHP(this.getHP()+temp);
             System.out.println("your Hp increased by 5% ");
         }
-        System.out.println("Your Hp: "+this.HP+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
-        if(this.number_of_moves<=3 && this.is_special_power_active){
-            this.is_special_power_active=false;
-            System.out.println("Special power deactivated");
-        }
+        System.out.println("Your Hp: "+this.getHP()+"/"+total_hero_hp+" Monsters HP: "+m.getHP()+"/"+total_monster_hp);
+        this.setIs_special_power_active(false);
+        System.out.println("Special power deactivated");
     }
-
-
 }
 
 class Monster{
-    protected int HP;
-    protected double curr_attack_power;
+    private int HP;
+    private double curr_attack_power;
 
     public int getHP() {
         return this.HP;
@@ -299,24 +303,25 @@ class Monster{
 }
 class Goblin extends Monster{
     Goblin(){
-        this.HP=100;
+        this.setHP(100);
     }
 
 }
 class Zombie extends Monster{
     Zombie(){
-        this.HP=100;
+        this.setHP(100);
     }
 
 }
 class Fiends extends Monster{
     Fiends(){
-        this.HP=200;
+        this.setHP(200);
     }
 }
 class Lionfang extends Monster{
     Lionfang(){
-        this.HP=250;
+        this.setHP(250);
+
     }
 
     @Override
@@ -330,7 +335,7 @@ class Lionfang extends Monster{
             int temp=h.getHP()/2;
             h.reduce_Hp(temp);
             System.out.println("The monster attacked and inflicted "+temp+" damage to you");
-            System.out.println("Your HP: "+h.getHP()+"/"+total_hero_hp+" Monsters HP: "+this.HP+"/"+total_monster_hp);
+            System.out.println("Your HP: "+h.getHP()+"/"+total_hero_hp+" Monsters HP: "+this.getHP()+"/"+total_monster_hp);
 
         }
 
