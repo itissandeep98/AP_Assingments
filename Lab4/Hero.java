@@ -1,4 +1,4 @@
-package Lab;
+package Ap_assignment.Lab4;
 
 import java.util.*;
 public abstract class Hero{

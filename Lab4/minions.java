@@ -1,4 +1,4 @@
-package Lab;
+package Ap_assignment.Lab4;
 public class minions extends Side_kick{
 	minions(){
 		this.setCloning_power_available(false);
