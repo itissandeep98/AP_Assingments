@@ -1,5 +1,4 @@
 package Ap_assignment.Lab1;
-
 import java.util.*;
 class Company{
     private String name, Course[], status;
