@@ -1,4 +1,4 @@
-package Lab;
+package Ap_assignment.Lab4;
 
 public abstract class Side_kick{
     private int xp;

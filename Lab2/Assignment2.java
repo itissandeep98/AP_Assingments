@@ -1,3 +1,5 @@
+package Ap_assignment.Lab2;
+
 import java.util.*;
 interface User {
     public static final String name="NONE";

@@ -1,3 +1,5 @@
+package Ap_assignment.Lab3;
+
 import java.util.*;
 
 abstract class Hero{

@@ -1,4 +1,4 @@
-package Lab;
+package Ap_assignment.Lab4;
 
 public class Thief extends Hero{
     Thief(String name){
