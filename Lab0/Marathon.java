@@ -266,8 +266,7 @@ public class Marathon {
 
                frame.add(result);
 
-            }
-        });
+            }});
 
         exit.addActionListener(new ActionListener() {
             @Override
