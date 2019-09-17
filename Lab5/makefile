@@ -1,6 +1,7 @@
 all: Racing.java
 	javac *.java
-	java Racing
-	
+	javac -d . Racing.java
+	java Ap_assignment.Lab5.Racing
+
 clean:
-	rm -f *.class
+	rm -f -r *.class Ap_assignment

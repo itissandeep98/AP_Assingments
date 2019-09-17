@@ -1,5 +1,6 @@
 all: Main.java
 	javac *.java
-	java -cp .. Lab.Main
+	javac -d . *.java
+	java Ap_assignment.Lab4.Main
 clean:
-	rm -f *.class
+	rm -f -r *.class Ap_assignment
