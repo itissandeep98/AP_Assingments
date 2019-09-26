@@ -48,15 +48,6 @@ public abstract class Side_kick {
         }
 	}
 	@Override
-	public Side_kick clone(){
-		Side_kick s=new minions();
-		s.setCloning_power_available(this.getCloning_power_available());
-		s.setDamage_power(this.getDamage_power());
-		s.setHp(this.getHp());
-		s.setXp(this.getXp());
-		return s;
-	}
-	@Override
 	public boolean equals(Object p){
 		if(p instanceof Side_kick){
 			Side_kick temp=(Side_kick) p;

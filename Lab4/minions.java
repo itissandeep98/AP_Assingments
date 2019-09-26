@@ -17,17 +17,26 @@ public class minions extends Side_kick implements Cloneable{
         System.out.println("Sidekick HP: "+this.getHp());
 
 	}
-
+	@Override
+	public minions clone(){
+		minions s=null;
+		try{
+			s=(minions) super.clone();
+		}
+		catch(CloneNotSupportedException e){
+			s=null;
+		}
+		s.setCloning_power_available(this.getCloning_power_available());
+		s.setDamage_power(this.getDamage_power());
+		s.setHp(this.getHp());
+		s.setXp(this.getXp());
+		return s;
+	}
 
 	void special_attack(Monster m){
 		cloned=new minions[3];
 		for(int i=0;i<3;i++){
-			try{
-				cloned[i]=(minions) super.clone();
-			}
-			catch(Exception e){
-				cloned[i]=this.clone();
-			}
+			cloned[i]=this.clone();
 		}
 		this.setCloning_power_available(true);
     }
