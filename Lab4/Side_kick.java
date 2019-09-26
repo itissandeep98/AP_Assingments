@@ -1,6 +1,6 @@
 package Ap_assignment.Lab4;
 
-public abstract class Side_kick{
+public abstract class Side_kick {
     private int xp;
 	private int hp;
     private int damage_power;
@@ -55,6 +55,16 @@ public abstract class Side_kick{
 		s.setHp(this.getHp());
 		s.setXp(this.getXp());
 		return s;
+	}
+	@Override
+	public boolean equals(Object p){
+		if(p instanceof Side_kick){
+			Side_kick temp=(Side_kick) p;
+			if(temp.xp==xp && temp.hp==hp && temp.damage_power==damage_power){
+				return true;
+			}
+		}
+		return false;
 	}
 
 	abstract void attack(Monster m);

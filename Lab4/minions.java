@@ -1,5 +1,5 @@
 package Ap_assignment.Lab4;
-public class minions extends Side_kick{
+public class minions extends Side_kick implements Cloneable{
 	minions(){
 		this.setCloning_power_available(false);
 		this.setDamage_power(1);
@@ -22,7 +22,12 @@ public class minions extends Side_kick{
 	void special_attack(Monster m){
 		cloned=new minions[3];
 		for(int i=0;i<3;i++){
-			cloned[i]=this.clone();
+			try{
+				cloned[i]=super.clone();
+			}
+			catch(Exception e){
+				cloned[i]=this.clone();
+			}
 		}
 		this.setCloning_power_available(true);
     }
