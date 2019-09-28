@@ -8,16 +8,13 @@ class SnakeBiteException extends Exception {
     public SnakeBiteException(String m) {
         super(m);
     }
-
 }
 
 @SuppressWarnings("serial")
 class CricketBiteException extends Exception {
-
     public CricketBiteException(String m) {
         super(m);
     }
-
 }
 
 @SuppressWarnings("serial")
@@ -32,7 +29,6 @@ class VultureBiteException extends Exception {
     public VultureBiteException(String m) {
         super(m);
     }
-
 }
 
 @SuppressWarnings("serial")
@@ -40,7 +36,6 @@ class TrampolineException extends Exception {
     public TrampolineException(String m) {
         super(m);
     }
-
 }
 
 class Tile {
@@ -72,6 +67,12 @@ public class Racing{
     public static int[] number_of_bites={0,0,0,0};
     public static int curr_pos = 0, roll_no = 0, value = r.nextInt(6) + 1, next_pos;
     public static String name;
+    public static User player;
+    public static Track court;
+
+    public static int getRoll(){
+        return r.nextInt(6) + 1;
+    }
 
     public static Tile[] setup_race_track(int[] count_of_tiles,int n){
 
@@ -126,15 +127,15 @@ public class Racing{
 
         while (curr_pos!=n-1) {
             roll_no++;
-            value = r.nextInt(6) + 1;
+            value=getRoll();
             if(curr_pos==0){
                 while (value != 6) {
                     System.out.println("[Roll-" + roll_no + "]: Josh rolled " + value + " at Tile-1, OOPs You need 6 to start");
-                    value = r.nextInt(6) + 1;
+                    value=getRoll();
                     roll_no++;
                 }
                 System.out.println("[Roll-" + roll_no + "]: Josh rolled 6 at Tile-1, You are out of the cage! You get a free roll");
-                value = r.nextInt(6) + 1;
+                value=getRoll();
                 roll_no++;
             }
             next_pos=curr_pos+value;
@@ -178,6 +179,9 @@ public class Racing{
     public static void main(String[] args) {
         int n=0;
         int []count_of_tiles=new int[5];
+        System.out.println("Enter the player Name");
+        name = scan.next();
+        player=new User(name);
         while (true) {
             try {
                 System.out.println("Enter total number of tiles on the race track (length)");
@@ -199,12 +203,13 @@ public class Racing{
 
         System.out.println("Setting up the race track.....");
         Tile[] track= setup_race_track(count_of_tiles,n);
+        court=new Track(n,count_of_tiles[0],count_of_tiles[1],count_of_tiles[2],count_of_tiles[3]);
+        court.setTrack(track);
         System.out.println("\nDanger: There are "+count_of_tiles[0]+", "+count_of_tiles[1]+", "+count_of_tiles[2]+" number of Snakes,Cricket and Vultures respectively on your track!\n");
         System.out.println("Danger: Each Snake, Cricket, and Vultures can throw you back by "+ powers[0]+", "+ powers[1]+", "+ powers[2]+ " number of Tiles respectively!\n");
         System.out.println("Good News: There are "+ count_of_tiles[3] +" number of Trampolines on your track!\n");
         System.out.println("Good News: Each Trampoline can help you advance by "+ powers[3]+" number of Tiles\n");
-        System.out.println("Enter the player Name");
-        name=scan.next();
+        System.out.println("\n-----------------------------------------------------------------------------------------------------\n");
         System.out.println("Starting the game with " +name +" at Tile-1");
         System.out.println("Control Transferred to Computer for rolling the Dice for Josh");
         System.out.println("Hit Enter to start The Game ");
