@@ -1,5 +1,5 @@
 all: Racing.java
-	javac *.java
+	javac -Xlint *.java
 	javac -d . Racing.java
 	java Ap_assignment.Lab6.Racing
 
