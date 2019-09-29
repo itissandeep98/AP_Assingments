@@ -4,4 +4,4 @@ all: Racing.java
 	java Ap_assignment.Lab6.Racing
 
 clean:
-	rm -f -r *.class Ap_assignment
+	rm -f -r *.class Ap_assignment out.txt
