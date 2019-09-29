@@ -1,9 +1,6 @@
 package Ap_assignment.Lab6;
 
 import java.util.*;
-
-import jdk.internal.org.jline.utils.InputStreamReader;
-
 import java.io.*;
 
 class User implements Serializable {
@@ -30,7 +27,7 @@ class User implements Serializable {
     }
     @Override
     public String toString(){
-        return "Name: "+name+" at Pos: "+curr_pos+" track "+track;
+        return "Player "+name+" was at "+(curr_pos+1)+" tile in a track of size "+ track.getLength_of_track() +" tiles.\n Total rolls were "+roll_count;
     }
     public int getNext_pos() {
         return this.next_pos;
@@ -410,19 +407,19 @@ public class Racing{
             if(isIntermediate(player.getNext_pos(),n)){
                 System.out.println("------You have reached to one of the Intermediate points------");
                 System.out.println("DO YOU WANT TO SAVE THIS GAME? (PRESS Y/N)");
-                String in=scan.next();
+                String in=bufscan.readLine();
                 if(in.equals("Y")|| in.equals("y")){
                     System.out.println("Saving your Game....");
                     User.seralize(player);
-                    System.out.println(player);
                     System.exit(0);
                 }
             }
             if(player.getNext_pos()==n-1){
+                player.setCurr_pos(player.getNext_pos());
                 break;
             }
             if(player.getNext_pos()!= player.getCurr_pos()){
-                player.setCurr_pos(player.getRoll_count());
+                player.setCurr_pos(player.getNext_pos());
                 System.out.println("\tTrying to shake the Tile-"+(player.getCurr_pos()+1));
                 if(track.getTrack(player.getCurr_pos()).getClass()==(new Snake()).getClass()){
                     player.incSnake_bites();
@@ -450,39 +447,40 @@ public class Racing{
         throw new GameWinnerException(" Wins the race in "+ player.getRoll_count()+" rolls");
     }
 
-    public static final Scanner scan=new Scanner(System.in);
-    // public static final BufferedReader bufscan=new BufferedReader(new InputStreamReader(System.in));
+    public static final BufferedReader bufscan=new BufferedReader(new InputStreamReader(System.in));
     public static void main(String[] args) throws IOException,ClassNotFoundException{
         int n=0;
+        String op="n";
         System.out.println("Enter the player Name");
-        String name = scan.next();
+        String name = bufscan.readLine();
         player=User.Deserialize();
         if(name.equals(player.getName())){
             System.out.println("Player name already exists");
             System.out.println("DO YOU WANT TO CONTINUE WHERE YOU LEFT OFF? (PRESS Y/N)");
-            String op=scan.next();
+            op=bufscan.readLine();
             if(op.equals("Y")|| op.equals("y")){
-                System.out.println(player);
                 n=player.getTrack().getLength_of_track();
+                System.out.println("----------------------------------------------");
+                System.out.println("\t!!!GAME RESTORED!!!");
+                System.out.println(player);
+                System.out.println("----------------------------------------------");
             }
             else{
-                System.out.println("!!!!!!!!!!Exiting!!!!");
-                System.exit(0);
+                System.out.println("Starting the game freshly with the same Name");
             }
-
+            
         }
-        else{
+        if(op.equals("n")||op.equals("N")){
             player=new User(name);
             while (true) {
                 try {
                     System.out.println("Enter total number of tiles on the race track (length)");
-                    n=scan.nextInt();
+                    n=Integer.parseInt(bufscan.readLine());
                     break;
                 }
                 catch (Exception e) {
-                    System.out.println("!!!!Some error occured!!!! \n\tplease re-enter");
+                    System.out.println("You entered value in a Wrong format \n\tplease re-enter");
                     n=100;
-                    scan.next();
                 }
                 finally{
                     if(n<9){
@@ -506,9 +504,8 @@ public class Racing{
 
         System.out.println("Control Transferred to Computer for rolling the Dice for"+player.getName());
         System.out.println("Hit Enter to start The Game ");
-        scan.nextLine();
         while (true) {
-            String s=scan.nextLine();
+            String s=bufscan.readLine();
             if(s.length()<=0)
                 break;
         }
@@ -516,6 +513,7 @@ public class Racing{
         while(true){
             try {
                 start_game(n, player.getTrack());
+                User.seralize(player);
                 break;
             }
             catch (SnakeBiteException e) {
@@ -558,6 +556,7 @@ public class Racing{
                 }
             }
             catch(GameWinnerException e){
+                System.out.println("<========================Game Ended=========================>");
                 System.out.println("------------------------------------------------------------------");
                 System.out.println(player.getName() +e.getMessage());
                 System.out.println("Total snake Bites= "+player.getSnake_bites());
@@ -565,6 +564,7 @@ public class Racing{
                 System.out.println("Total Vulture Bites= "+player.getVulture_bites());
                 System.out.println("Total Trampolines= "+player.getTrampoline_bites());
                 System.out.println("------------------------------------------------------------------");
+                User.seralize(player);
                 break;
             }
         }
