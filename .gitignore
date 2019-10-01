@@ -1,3 +1,4 @@
 Lab6/makefile
 *.class
 a.out
+.vscode
