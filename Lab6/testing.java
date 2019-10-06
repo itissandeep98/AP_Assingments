@@ -83,6 +83,5 @@ public class testing {
         player.iniTrack(n);
         User.serialise(player);
         assertEquals(player.getName(),User.Deserialize("test").getName());
-
     }
 }
