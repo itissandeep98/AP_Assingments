@@ -82,7 +82,7 @@ public class testing {
         User player=new User("test");
         player.iniTrack(n);
         User.serialise(player);
-        assertEquals(player.getName(),User.Deserialize("").getName());
+        assertEquals(player.getName(),User.Deserialize("test").getName());
 
     }
 }
