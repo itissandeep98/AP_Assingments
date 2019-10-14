@@ -42,7 +42,7 @@ class TrampolineException extends Exception {
 
 }
 
-class Tile {
+abstract class Tile {
     private int power;
 
     public int getPower() {
@@ -52,18 +52,40 @@ class Tile {
     public void setPower(int power) {
         this.power = power;
     }
+    public abstract void shake()throws SnakeBiteException,CricketBiteException,VultureBiteException,TrampolineException;
 
 }
 
-class Snake extends Tile {}
+class Snake extends Tile {
+    public void shake() throws SnakeBiteException{
+        throw new SnakeBiteException("\tHiss...! Iam a Snake, you go back "+ this.getPower()+ " tiles!");
+    }
+}
 
-class Vulture extends Tile {}
+class Vulture extends Tile {
+    public void shake()throws VultureBiteException{
+        throw new VultureBiteException("\tYapping...! I am a Vulture, you go back "+ this.getPower() +" tiles!");
+    }
+}
 
-class Cricket extends Tile {}
+class Cricket extends Tile {
+    public void shake()throws CricketBiteException{
+        throw new CricketBiteException("\tChirp…! I am a Cricket, you go back "+ this.getPower() +" tiles!");
+    }
+}
 
-class Trampoline extends Tile {}
+class Trampoline extends Tile {
+    public void shake()throws TrampolineException{
+        throw new TrampolineException("\tPingPong! I am a Trampoline, you advance "+ this.getPower() +" tiles");
+    }
+}
 
-class White extends Tile {}
+class White extends Tile {
+    public void shake(){
+        System.out.println("\tI am a White Tile!");
+        
+    }
+}
 
 public class Racing{
     public static Random r = new Random();
@@ -147,27 +169,8 @@ public class Racing{
             if(next_pos!=curr_pos){
                 curr_pos=next_pos;
                 System.out.println("\tTrying to shake the Tile-"+(next_pos+1));
-                if(track[next_pos].getClass()==(new Snake()).getClass()){
-                    number_of_bites[0]++;
-                    throw new SnakeBiteException("\tHiss...! Iam a Snake, you go back "+ track[next_pos].getPower()+ " tiles!");
-                }
-                else if(track[next_pos].getClass()==(new Cricket()).getClass()){
-                    number_of_bites[1]++;
-                    throw new CricketBiteException("\tChirp…! I am a Cricket, you go back "+ track[next_pos].getPower() +" tiles!");
-                }
-                else if(track[next_pos].getClass()==(new Vulture()).getClass()){
-                    number_of_bites[2]++;
-                    throw new VultureBiteException("\tYapping...! I am a Vulture, you go back "+ track[next_pos].getPower() +" tiles!");
-                }
-                else if(track[next_pos].getClass()==(new Trampoline()).getClass()){
-                    number_of_bites[3]++;
-                    throw new TrampolineException("\tPingPong! I am a Trampoline, you advance "+ track[next_pos].getPower() +" tiles");
-                }
-                else{
-                    System.out.println("\tI am a White Tile!");
-                    System.out.println("\t"+name+" moved to Tile-"+(next_pos+1));
-                }
-
+                track[next_pos].shake();
+                System.out.println("\t" + name + " moved to Tile-" + (next_pos + 1));
             }
         }
         throw new GameWinnerException(" Wins the race in "+ roll_no+" rolls");
@@ -213,6 +216,7 @@ public class Racing{
             if(s.length()<=0)
                 break;
         }
+        boolean end=true;
         System.out.println("<========================Game started=======================>");
         while(true){
             try {
@@ -220,42 +224,24 @@ public class Racing{
             }
             catch (SnakeBiteException e) {
                 System.out.println(e.getMessage());
+                number_of_bites[0]++;
                 curr_pos -= powers[0];
-                if (curr_pos < 0) {
-                    curr_pos = 0;
-                    System.out.println("\t" + name + " moved to Tile-1 as it can't go back further");
-                } else {
-                    System.out.println("\t" + name + " moved to Tile-" + (curr_pos + 1));
-                }
+                
             } catch (CricketBiteException e) {
                 System.out.println(e.getMessage());
+                number_of_bites[1]++;
                 curr_pos -= powers[1];
-                if (curr_pos < 0) {
-                    curr_pos = 0;
-                    System.out.println("\t" + name + " moved to Tile-1 as it can't go back further");
-                } else {
-                    System.out.println("\t" + name + " moved to Tile-" + (curr_pos + 1));
-                }
+                
             } catch (VultureBiteException e) {
                 System.out.println(e.getMessage());
+                number_of_bites[2]++;
                 curr_pos -= powers[2];
-                if (curr_pos < 0) {
-                    curr_pos = 0;
-                    System.out.println("\t" + name + " moved to Tile-1 as it can't go back further");
-                } else {
-                    System.out.println("\t" + name + " moved to Tile-" + (curr_pos + 1));
-                }
+                
             }
             catch(TrampolineException e){
                 System.out.println(e.getMessage());
+                number_of_bites[3]++;
                 curr_pos+=powers[3];
-                if(curr_pos>n-1){
-                    curr_pos-=powers[3];
-                    System.out.println("\t"+name+" remains at its position, as can't go further");
-                }
-                 else {
-                    System.out.println("\t" + name + " moved to Tile-" + (curr_pos + 1));
-                }
             }
             catch(GameWinnerException e){
                 System.out.println("------------------------------------------------------------------");
@@ -265,7 +251,23 @@ public class Racing{
                 System.out.println("Total Vulture Bites= "+number_of_bites[2]);
                 System.out.println("Total Trampolines= "+number_of_bites[3]);
                 System.out.println("------------------------------------------------------------------");
+                end=false;
                 break;
+            }
+            finally{
+                if(end){
+                    if (curr_pos > n - 1) {
+                        curr_pos -= powers[3];
+                        System.out.println("\t" + name + " remains at its position, as can't go further");
+                    }
+                    else if (curr_pos < 0) {
+                        curr_pos = 0;
+                        System.out.println("\t" + name + " moved to Tile-1 as it can't go back further");
+                    } else {
+                        System.out.println("\t" + name + " moved to Tile-" + (curr_pos + 1));
+                    }
+
+                }
             }
         }
     }
