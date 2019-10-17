@@ -57,30 +57,35 @@ abstract class Tile {
 }
 
 class Snake extends Tile {
+    @Override
     public void shake() throws SnakeBiteException{
         throw new SnakeBiteException("\tHiss...! Iam a Snake, you go back "+ this.getPower()+ " tiles!");
     }
 }
 
 class Vulture extends Tile {
+     @Override
     public void shake()throws VultureBiteException{
         throw new VultureBiteException("\tYapping...! I am a Vulture, you go back "+ this.getPower() +" tiles!");
     }
 }
 
 class Cricket extends Tile {
+     @Override
     public void shake()throws CricketBiteException{
         throw new CricketBiteException("\tChirp…! I am a Cricket, you go back "+ this.getPower() +" tiles!");
     }
 }
 
 class Trampoline extends Tile {
+     @Override
     public void shake()throws TrampolineException{
         throw new TrampolineException("\tPingPong! I am a Trampoline, you advance "+ this.getPower() +" tiles");
     }
 }
 
 class White extends Tile {
+    @Override
     public void shake(){
         System.out.println("\tI am a White Tile!");
         

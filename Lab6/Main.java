@@ -70,7 +70,7 @@ public class Main{
         return r.nextInt(6) + 1;
     }
 
-    public static void start_game(User player ,int n,Track track) throws GameSaveException,IOException,GameWinnerException,SnakeBiteException,CricketBiteException,VultureBiteException,TrampolineException {
+    public static void start_game(User player ,int n,Track track) throws GameSaveException,GameWinnerException,SnakeBiteException,CricketBiteException,VultureBiteException,TrampolineException {
 
         while (player.getCurr_pos()<=n-1) {
             if(player.getRoll_count()==0)
@@ -107,26 +107,8 @@ public class Main{
             if(player.getNext_pos()!= player.getCurr_pos()){
                 player.setCurr_pos(player.getNext_pos());
                 System.out.println("\tTrying to shake the Tile-"+(player.getCurr_pos()+1));
-                if(track.getTrack(player.getCurr_pos()).getClass()==Snake.class){
-                    player.incSnake_bites();
-                    throw new SnakeBiteException("\tHiss...! Iam a Snake, you go back "+ track.getTrack(player.getCurr_pos()).getPower()+ " tiles!");
-                }
-                else if(track.getTrack(player.getCurr_pos()).getClass()==Cricket.class){
-                    player.incCricket_bites();
-                    throw new CricketBiteException("\tChirp...! I am a Cricket, you go back "+ track.getTrack(player.getCurr_pos()).getPower() +" tiles!");
-                }
-                else if(track.getTrack(player.getCurr_pos()).getClass()==Vulture.class){
-                    player.incVulture_bites();
-                    throw new VultureBiteException("\tYapping...! I am a Vulture, you go back "+ track.getTrack(player.getCurr_pos()).getPower() +" tiles!");
-                }
-                else if(track.getTrack(player.getCurr_pos()).getClass()==Trampoline.class){
-                    player.incTrampoline_bites();
-                    throw new TrampolineException("\tPingPong..! I am a Trampoline, you advance "+ track.getTrack(player.getCurr_pos()).getPower() +" tiles");
-                }
-                else{
-                    System.out.println("\tI am a White Tile!");
-                    System.out.println("\t"+player.getName()+" moved to Tile-"+(player.getNext_pos()+1));
-                }
+                track.getTrack(player.getCurr_pos()).shake();
+                System.out.println("\t" + player.getName() + " moved to Tile-" + (player.getNext_pos() + 1));
             }
         }
         throw new GameWinnerException(" Wins the race in "+ player.getRoll_count()+" rolls");
@@ -204,6 +186,7 @@ public class Main{
             catch (SnakeBiteException e) {
                 System.out.println(e.getMessage());
                 player.setCurr_pos(player.getCurr_pos() - player.getTrack().getSnake_power());
+                player.incSnake_bites();
                 if (player.getCurr_pos() < 0) {
                     player.setCurr_pos(0);
                     System.out.println("\t" + player.getName() + " moved to Tile-1 as it can't go back further");
@@ -213,6 +196,7 @@ public class Main{
             } catch (CricketBiteException e) {
                 System.out.println(e.getMessage());
                 player.setCurr_pos(player.getCurr_pos()- player.getTrack().getCricket_power());
+                player.incCricket_bites();
                 if (player.getCurr_pos() < 0) {
                     player.setCurr_pos(0);
                     System.out.println("\t" + player.getName() + " moved to Tile-1 as it can't go back further");
@@ -222,6 +206,7 @@ public class Main{
             } catch (VultureBiteException e) {
                 System.out.println(e.getMessage());
                 player.setCurr_pos(player.getCurr_pos() - player.getTrack().getVulture_power());
+                player.incVulture_bites();
                 if (player.getCurr_pos() < 0) {
                     player.setCurr_pos(0);
                     System.out.println("\t" + player.getName() + " moved to Tile-1 as it can't go back further");
@@ -232,6 +217,7 @@ public class Main{
             catch(TrampolineException e){
                 System.out.println(e.getMessage());
                 player.setCurr_pos(player.getCurr_pos() + player.getTrack().getTrampoline_power());
+                player.incTrampoline_bites();
                 if(player.getCurr_pos()>n-1){
                     player.setCurr_pos(player.getCurr_pos()- player.getTrack().getTrampoline_power());
                     System.out.println("\t"+player.getName()+" remains at its position, as can't go further");
@@ -264,8 +250,8 @@ public class Main{
                 else{
                     continue;
                 }
-
             }
+
         }
     }
 }
