@@ -1,3 +1,6 @@
 *.class
 a.out
 .vscode
+BonusLab/out
+BonusLab/.idea
+BonusLab/BonusLab.iml
