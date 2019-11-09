@@ -1,7 +1,10 @@
+import java.time.Duration;
+import java.time.Instant;
 
 public class Fibonacci implements Runnable{
     private int n;
     private int result;
+    private String computation_time;
 
     Fibonacci(int x){
         this.n=x;
@@ -27,6 +30,13 @@ public class Fibonacci implements Runnable{
 
     @Override
     public void run() {
+        Instant start=Instant.now();
         result=fib(n);
+        Instant finish=Instant.now();
+        computation_time= Duration.between(start,finish).toString();
+    }
+
+    public String getTime() {
+        return computation_time;
     }
 }
