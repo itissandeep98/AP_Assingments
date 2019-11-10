@@ -2,15 +2,15 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 public class producer extends Thread {
-    public static volatile ArrayList<Fibonacci> list;
-    public static int thread_capacity = 0;
-    public static volatile int memo[];
-    public static Thread thread_list[];
-//    public static consumer c;
-    public static volatile ArrayList<Fibonacci> answers_list;
+    private static volatile ArrayList<Fibonacci> list;
+    private static volatile ArrayList<Fibonacci> answers_list;
+    public static volatile int[] memo;
+    private static volatile Thread[] thread_list;
+    private static int thread_capacity = 0;
+    private static producer p;
 
 
-    producer(int num){
+    private producer(int num){
         list= new ArrayList<Fibonacci>();
         thread_capacity=num;
         memo=new int[50];
@@ -22,20 +22,20 @@ public class producer extends Thread {
         Scanner scan=new Scanner(System.in);
         System.out.println("Enter the total number of consumer threads to be generated");
         int num_threads=scan.nextInt();
-//        c=new consumer();
-        producer p=new producer(num_threads);
-        p.start();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
 
-                    calculate();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        p=new producer(num_threads);
+
+        Thread t=new Thread(() -> {
+            try {
+                calculate();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        }).start();
+        });
+        p.start();
+        t.start();
+        p.join();
+        t.join();
     }
 
 
@@ -49,7 +49,7 @@ public class producer extends Thread {
         }
         System.out.println("Answers SO FAR");
         for(Fibonacci f:answers_list){
-            System.out.println("\t\t"+f.getResult()+"\tTime: "+f.getTime());
+            System.out.println("\t"+f.getvalue()+"\t"+f.getResult()+"\tTime: "+f.getTime().substring(2));
         }
     }
 
@@ -62,7 +62,7 @@ public class producer extends Thread {
             String inp=scan.next();
             if(inp.equals("exit")){
                 show_answers();
-                return;
+                System.exit(0);
             }
             else if(inp.equals("show")){
                 show_answers();
@@ -74,16 +74,16 @@ public class producer extends Thread {
                     notifyAll();
                 }
                 catch (NumberFormatException e){
-                    System.out.println("\tCan't process that");
+                    System.out.println("\tCan't process that");                                                                                                                                                                                                                                                                                             
                 }
             }
         }
     }
-    public static int find_thread(){
+    private static int find_thread(){
         int i=0;
-        while (producer.thread_list[i]!=null && producer.thread_list[i].isAlive()){
+        while (thread_list[i]!=null && thread_list[i].isAlive()){
             i++;
-            if(i>=producer.thread_capacity){
+            if(i>=thread_capacity){
                 i=0;
             }
         }
@@ -92,13 +92,12 @@ public class producer extends Thread {
 
     private static void calculate() throws InterruptedException {
         while (true) {
-            while (producer.list.size() == 0)
+            while (list.size() == 0)
                 continue;
-            producer.answers_list.add(producer.list.remove(0));
+            answers_list.add(list.remove(0));
             int i = find_thread();
-            producer.thread_list[i] = new Thread(producer.answers_list.get(producer.answers_list.size() - 1));
-            producer.thread_list[i].start();
-
+            thread_list[i] = new Thread(answers_list.get(answers_list.size() - 1));
+            thread_list[i].start();
         }
     }
 

@@ -1,7 +1,7 @@
 import java.time.Duration;
 import java.time.Instant;
 
-public class Fibonacci implements Runnable{
+public class Fibonacci extends Thread{
     private int n;
     private int result;
     private String computation_time;
