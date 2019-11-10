@@ -10,12 +10,13 @@ public class producer extends Thread {
     private static int thread_capacity = 0;
     private static producer p;
     private static HashMap<Integer,Fibonacci> map;
+    private static volatile boolean flag=true;
 
 
     private producer(int num){
         list= new ArrayList<Fibonacci>();
         thread_capacity=num;
-        memo=new int[50];
+        memo=new int[100];
         thread_list=new Thread[num];
         answers_list=new ArrayList<Fibonacci>();
         map= new HashMap<Integer, Fibonacci>();
@@ -27,24 +28,28 @@ public class producer extends Thread {
         int num_threads=scan.nextInt();
 
         p=new producer(num_threads);
+        p.create_thread();
 
-        Thread t=new Thread(() -> {
-            try {
-                calculate();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        });
+
         p.start();
-        t.start();
         p.join();
-        t.join();
+    }
+
+    private void create_thread(){
+        for(int i=0;i<thread_capacity;i++) {
+
+            thread_list[i] = new Thread(() -> {
+                p.calculate();
+            });
+            thread_list[i].start();
+        }
     }
 
 
 
-
     private void show_answers() throws InterruptedException {
+
+        flag=false;
         for(int i=0;i<thread_capacity;i++){
             if(thread_list[i]!=null && thread_list[i].isAlive()){
                 thread_list[i].join();
@@ -59,16 +64,18 @@ public class producer extends Thread {
     private synchronized void  operate() throws InterruptedException {
         Scanner scan=new Scanner(System.in);
         while (true){
-            while (list.size()==thread_capacity)
-                wait();
             System.out.println("Enter your number");
             String inp=scan.next();
             if(inp.equals("exit")){
+
                 show_answers();
                 System.exit(0);
             }
             else if(inp.equals("show")){
+
                 show_answers();
+                flag=true;
+                create_thread();
             }
             else{
                 try {
@@ -79,7 +86,6 @@ public class producer extends Thread {
                     else{
                         map.put(n,new Fibonacci(n));
                         list.add(map.get(n));
-                        notifyAll();
                     }
                 }
                 catch (NumberFormatException e){
@@ -88,25 +94,19 @@ public class producer extends Thread {
             }
         }
     }
-    private static int find_thread(){
-        int i=0;
-        while (thread_list[i]!=null && thread_list[i].isAlive()){
-            i++;
-            if(i>=thread_capacity){
-                i=0;
-            }
-        }
-        return i;
-    }
 
-    private static void calculate() throws InterruptedException {
-        while (true) {
-            while (list.size() == 0)
-                continue;
-            answers_list.add(list.remove(0));
-            int i = find_thread();
-            thread_list[i] = new Thread(answers_list.get(answers_list.size() - 1));
-            thread_list[i].start();
+    private  void calculate() {
+        while (flag) {
+            synchronized (list) {
+                while (list.size() == 0 && flag){
+                    continue;
+                }
+                if (list.size() > 0) {
+                    Fibonacci f = list.remove(0);
+                    answers_list.add(f);
+                    f.setResult();
+                }
+            }
         }
     }
 
