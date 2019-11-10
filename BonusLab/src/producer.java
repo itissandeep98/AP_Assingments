@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 
 public class producer extends Thread {
@@ -8,6 +9,7 @@ public class producer extends Thread {
     private static volatile Thread[] thread_list;
     private static int thread_capacity = 0;
     private static producer p;
+    private static HashMap<Integer,Fibonacci> map;
 
 
     private producer(int num){
@@ -16,6 +18,7 @@ public class producer extends Thread {
         memo=new int[50];
         thread_list=new Thread[num];
         answers_list=new ArrayList<Fibonacci>();
+        map= new HashMap<Integer, Fibonacci>();
     }
 
     public static void main(String[] args) throws InterruptedException {
@@ -70,8 +73,14 @@ public class producer extends Thread {
             else{
                 try {
                     int n = Integer.parseInt(inp);
-                    list.add(new Fibonacci(n));
-                    notifyAll();
+                    if(map.containsKey(n)){
+                        answers_list.add(map.get(n));
+                    }
+                    else{
+                        map.put(n,new Fibonacci(n));
+                        list.add(map.get(n));
+                        notifyAll();
+                    }
                 }
                 catch (NumberFormatException e){
                     System.out.println("\tCan't process that");                                                                                                                                                                                                                                                                                             
