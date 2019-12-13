@@ -29,8 +29,6 @@ public class producer extends Thread {
 
         p=new producer(num_threads);
         p.create_thread();
-
-
         p.start();
         p.join();
     }
@@ -41,6 +39,7 @@ public class producer extends Thread {
             thread_list[i] = new Thread(() -> {
                 p.calculate();
             });
+
             thread_list[i].start();
         }
     }
@@ -48,7 +47,6 @@ public class producer extends Thread {
 
 
     private void show_answers() throws InterruptedException {
-
         flag=false;
         for(int i=0;i<thread_capacity;i++){
             if(thread_list[i]!=null && thread_list[i].isAlive()){
@@ -67,9 +65,8 @@ public class producer extends Thread {
             System.out.println("Enter your number");
             String inp=scan.next();
             if(inp.equals("exit")){
-
                 show_answers();
-                System.exit(0);
+                return;
             }
             else if(inp.equals("show")){
 
@@ -97,15 +94,19 @@ public class producer extends Thread {
 
     private  void calculate() {
         while (flag) {
+            Fibonacci f=null;
             synchronized (list) {
                 while (list.size() == 0 && flag){
                     continue;
                 }
                 if (list.size() > 0) {
-                    Fibonacci f = list.remove(0);
+                    f = list.remove(0);
                     answers_list.add(f);
-                    f.setResult();
                 }
+            }
+
+            if(f!=null){
+                f.setResult();
             }
         }
     }
